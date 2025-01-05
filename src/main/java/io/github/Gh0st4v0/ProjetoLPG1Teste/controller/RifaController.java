@@ -23,9 +23,10 @@ public class RifaController {
         return this.service.verRifas();
     }
 
+    //TODO
     @PostMapping("participar")
     public ResponseEntity adicionarParticipante(@RequestBody String usuarioId, @RequestBody Integer numeroBilhetes){
-
+        return ResponseEntity.ok().build();
     }
 
 }
