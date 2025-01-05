@@ -1,5 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.service;
 
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.AuthenticationException;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.DatabaseOperationException;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.InvalidInputException;
@@ -27,9 +28,12 @@ public class UsuarioService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public List<Usuario> getAllUsers() {
+    public List<UsuarioDTO> getAllUsers() {
         try {
-            return repository.findAll();
+            return repository.findAll()
+                    .stream()
+                    .map(user -> new UsuarioDTO(user.getId(), user.getNome(), user.getEmail()))
+                    .toList();
         } catch (Exception e) {
             throw new DatabaseOperationException("Erro ao tentar recuperar todos os usuários");
         }

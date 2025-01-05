@@ -36,7 +36,7 @@ public class Usuario implements UserDetails {
     private List<Rifa> rifasCriadas;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "usuario_id")
+    @OneToMany(mappedBy = "usuario")
     private List<Bilhete> bilhetes;
 
     @JsonBackReference

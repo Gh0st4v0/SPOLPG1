@@ -1,9 +1,11 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.controller;
 
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,9 @@ public class UsuarioController {
     }
 
     @GetMapping("all")
-    public List<Usuario> getAllUsers(){
-        return this.service.getAllUsers();
+    public ResponseEntity<List<UsuarioDTO>> getAllUsers(){
+        List<UsuarioDTO> users = this.service.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
    @PutMapping("update/name/{id}")

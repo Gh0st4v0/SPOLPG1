@@ -35,7 +35,7 @@ public class Rifa {
     private Usuario criador;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "rifa_id")
+    @OneToMany(mappedBy = "rifa")
     private List<Bilhete> bilhetes;
 
     @JsonManagedReference
