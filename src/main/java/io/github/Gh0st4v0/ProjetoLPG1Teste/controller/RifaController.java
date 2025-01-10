@@ -1,5 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.controller;
 
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.service.RifaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,9 @@ public class RifaController {
     }
 
     @GetMapping("all")
-    public List<Rifa> verRifas(){
-        return this.service.verRifas();
+    public ResponseEntity<List<RifaDTO>> verRifas(){
+        List<RifaDTO> rifas = this.service.verRifas();
+        return ResponseEntity.ok(rifas);
     }
 
     //TODO

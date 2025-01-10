@@ -1,5 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.service;
 
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.AuthenticationException;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.DatabaseOperationException;
@@ -40,14 +41,16 @@ public class UsuarioService {
     }
 
 
-    public Usuario alterarNome(String id, Usuario user) {
+    public UsuarioDTO alterarNome(String id, Usuario user) {
         if (user.getNome() == null) {
             throw new InvalidInputException("O campo nome está vazio");
         }
         Usuario teste = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Id não encontrado"));
         try {
             teste.setNome(user.getNome());
-            return repository.save(teste);
+            Usuario usuarioAlterado = repository.save(teste);
+            UsuarioDTO usuarioDTO = new UsuarioDTO(usuarioAlterado.getId(), usuarioAlterado.getNome(), usuarioAlterado.getEmail());
+            return usuarioDTO;
         } catch (Exception e) {
             throw new DatabaseOperationException("Erro ao tentar alterar o nome do usuário");
         }
@@ -66,10 +69,17 @@ public class UsuarioService {
         }
     }
 
-    public Rifa criarRifa(Rifa rifa, String id){
-        Usuario teste = repository.findById(id).orElseThrow(() -> new UserNotFoundException("O usuario recebido para criar a rifa não existe"));
-        rifa.setCriador(teste);
-        return rifaRepository.save(rifa);
+    public RifaDTO criarRifa(String nome, String id){
+        try{
+            Usuario criador = repository.findById(id).orElseThrow(() -> new UserNotFoundException("O usuario recebido para criar a rifa não existe"));
+            Rifa rifa = new Rifa(nome, criador);
+            Rifa novaRifa = rifaRepository.save(rifa);
+            System.out.println(novaRifa);
+            return new RifaDTO(novaRifa.getId(), novaRifa.getNome(), novaRifa.getCriador().getNome());
+        } catch (Exception e){
+            throw new DatabaseOperationException("Erro ao tentar criar rifa");
+        }
+
     }
 }
 

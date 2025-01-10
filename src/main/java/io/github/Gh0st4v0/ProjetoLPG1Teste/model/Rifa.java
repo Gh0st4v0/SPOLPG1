@@ -4,6 +4,7 @@ package io.github.Gh0st4v0.ProjetoLPG1Teste.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cascade;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class Rifa {
 
     @Id
@@ -47,4 +49,9 @@ public class Rifa {
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
     private List<Usuario> participantes;
+
+    public Rifa(String nome, Usuario criador){
+        this.nome = nome;
+        this.criador = criador;
+    }
 }

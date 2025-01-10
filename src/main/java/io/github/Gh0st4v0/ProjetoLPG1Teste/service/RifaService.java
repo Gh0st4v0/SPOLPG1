@@ -1,5 +1,7 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.service;
 
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.DatabaseOperationException;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Bilhete;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
@@ -22,9 +24,12 @@ public class RifaService {
         this.bilheteRepository = bilheteRepository;
     }
 
-    public List<Rifa> verRifas(){
+    public List<RifaDTO> verRifas(){
         try{
-            return repository.findAll();
+            return repository.findAll()
+                    .stream()
+                    .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getCriador().getNome()))
+                    .toList();
         } catch (Exception e){
             throw new DatabaseOperationException("Não foi possivel encontrar os usuarios");
         }
