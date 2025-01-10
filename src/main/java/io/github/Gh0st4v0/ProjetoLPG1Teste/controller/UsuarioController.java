@@ -2,6 +2,7 @@ package io.github.Gh0st4v0.ProjetoLPG1Teste.controller;
 
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaRegisterDTO;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UpdateNameDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
@@ -31,8 +32,8 @@ public class UsuarioController {
     }
 
    @PutMapping("update/name/{id}")
-   public ResponseEntity<UsuarioDTO> alterarNome(@PathVariable String id, @RequestBody Usuario user){
-        return ResponseEntity.ok(this.service.alterarNome(id, user));
+   public ResponseEntity<UsuarioDTO> alterarNome(@PathVariable String id, @RequestBody UpdateNameDTO usuario){
+        return ResponseEntity.ok(this.service.alterarNome(id, usuario.nome()));
    }
 
    @DeleteMapping("delete/{id}")
@@ -42,9 +43,8 @@ public class UsuarioController {
    }
 
    @PostMapping("/rifas/new/{id}")
-    public ResponseEntity<RifaDTO> criarRifa(@PathVariable String id, @RequestBody @Validated RifaRegisterDTO rifa){
+    public ResponseEntity<RifaDTO> criarRifa(@PathVariable String id, @RequestBody RifaRegisterDTO rifa){
         RifaDTO novaRifa = this.service.criarRifa(rifa.nome(), id);
-        System.out.println(novaRifa);
         return ResponseEntity.ok( novaRifa );
    }
 }
