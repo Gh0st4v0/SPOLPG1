@@ -56,9 +56,9 @@ public class UsuarioService {
         }
     }
 
-    public void deletarUsuario(String id, Usuario user) {
+    public void deletarUsuario(String id, String senha) {
         Usuario teste = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Id não encontrado"));
-        boolean senhaCorreta = passwordEncoder.matches(user.getSenha(), teste.getSenha());
+        boolean senhaCorreta = passwordEncoder.matches(senha, teste.getSenha());
         if (!senhaCorreta) {
             throw new AuthenticationException("Senha incorreta");
         }

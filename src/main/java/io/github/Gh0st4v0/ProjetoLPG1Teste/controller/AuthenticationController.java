@@ -3,6 +3,7 @@ package io.github.Gh0st4v0.ProjetoLPG1Teste.controller;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.AuthenticationDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.LoginResponseDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RegisterDTO;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.infra.TokenService;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.UsuarioRepository;
@@ -39,12 +40,12 @@ public class AuthenticationController {
     };
 
     @PostMapping("register")
-    public ResponseEntity criarUsuario(@RequestBody RegisterDTO data){
+    public ResponseEntity<UsuarioDTO> criarUsuario(@RequestBody RegisterDTO data){
         if(this.repository.findByEmail(data.email()).isPresent()) return ResponseEntity.badRequest().build();
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.senha());
         Usuario usuario = new Usuario(data.nome(), data.email(), encryptedPassword);
         this.repository.save(usuario);
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(new UsuarioDTO(usuario.getId(), usuario.getNome(), usuario.getEmail()));
     }
 
 }

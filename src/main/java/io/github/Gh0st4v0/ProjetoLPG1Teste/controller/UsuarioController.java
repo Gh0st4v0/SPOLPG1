@@ -1,9 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.controller;
 
-import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaRegisterDTO;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UpdateNameDTO;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.*;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.service.UsuarioService;
@@ -37,8 +34,8 @@ public class UsuarioController {
    }
 
    @DeleteMapping("delete/{id}")
-    public ResponseEntity deletarUsuario(@PathVariable String id, @RequestBody Usuario user){
-        this.service.deletarUsuario(id, user);
+    public ResponseEntity deletarUsuario(@PathVariable String id, @RequestBody AuthenticationDTO user){
+        this.service.deletarUsuario(id, user.senha());
         return ResponseEntity.ok().build();
    }
 
