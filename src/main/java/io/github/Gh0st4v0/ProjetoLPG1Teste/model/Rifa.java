@@ -11,7 +11,9 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "rifas")
@@ -38,7 +40,7 @@ public class Rifa {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "rifa")
-    private List<Bilhete> bilhetes;
+    private Set<Bilhete> bilhetes = new HashSet<>();
 
     @JsonManagedReference
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
@@ -48,10 +50,16 @@ public class Rifa {
             joinColumns = @JoinColumn(name = "rifa_id"),
             inverseJoinColumns = @JoinColumn(name = "usuario_id")
     )
-    private List<Usuario> participantes;
+    private Set<Usuario> participantes = new HashSet<>();
 
     public Rifa(String nome, Usuario criador){
         this.nome = nome;
         this.criador = criador;
     }
+
+    public void adicionarParticipante(Usuario usuario){
+        participantes.add(usuario);
+    }
+
+
 }

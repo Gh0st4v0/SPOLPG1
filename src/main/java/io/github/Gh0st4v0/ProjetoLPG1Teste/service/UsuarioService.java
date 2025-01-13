@@ -3,12 +3,11 @@ package io.github.Gh0st4v0.ProjetoLPG1Teste.service;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RegisterDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.AuthenticationException;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.DatabaseOperationException;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.InvalidInputException;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.UserNotFoundException;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.*;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Bilhete;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.BilheteRepository;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.RifaRepository;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,13 @@ public class UsuarioService {
     private final UsuarioRepository repository;
     private final RifaRepository rifaRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final BilheteRepository bilheteRepository;
 
     @Autowired
-    public UsuarioService(UsuarioRepository repository, RifaRepository rifaRepository) {
+    public UsuarioService(UsuarioRepository repository, RifaRepository rifaRepository, BilheteRepository bilheteRepository) {
         this.repository = repository;
         this.rifaRepository = rifaRepository;
+        this.bilheteRepository = bilheteRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -92,6 +93,22 @@ public class UsuarioService {
             throw new DatabaseOperationException("Erro ao tentar criar rifa");
         }
 
+    }
+
+    public void comprarBilhetes(String id, String rifaId, int bilhetes) {
+        try{
+            if (bilhetes < 1) throw new ArithmeticException("O usuário deve comprar ao menos um bilhete");
+            Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+            Rifa rifa = rifaRepository.findById(rifaId).orElseThrow(() -> new RifaNotFoundException("Rifa não encontrada"));
+            rifa.adicionarParticipante(usuario);
+            for (int i = 0; i < bilhetes; i++) {
+                Bilhete bilhete = new Bilhete(usuario, rifa);
+                bilheteRepository.save(bilhete);
+            }
+            rifaRepository.save(rifa);
+        } catch (Exception e){
+            throw new DatabaseOperationException("Erro ao tentar comprar bilhetes");
+        }
     }
 }
 

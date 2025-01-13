@@ -1,9 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.infra;
 
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.AuthenticationException;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.DatabaseOperationException;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.InvalidInputException;
-import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.UserNotFoundException;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,6 +28,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DatabaseOperationException.class)
     public ResponseEntity<String> databaseOperationHandler(DatabaseOperationException exception) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro no banco de dados: " + exception.getMessage());
+    }
+
+    @ExceptionHandler(RifaNotFoundException.class)
+    public ResponseEntity<String> rifaNotFoundHandler(RifaNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Rifa não encontrada: " + exception.getMessage());
+    }
+
+    @ExceptionHandler(ArithmeticException.class)
+    public ResponseEntity<String> handleArithmeticException(ArithmeticException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro aritmético: " + exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

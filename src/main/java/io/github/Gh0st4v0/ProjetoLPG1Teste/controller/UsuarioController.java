@@ -48,4 +48,10 @@ public class UsuarioController {
         RifaDTO novaRifa = this.service.criarRifa(rifa.nome(), id);
         return ResponseEntity.ok( novaRifa );
     }
+
+    @PostMapping("{id}/rifas/{rifaId}")
+    public ResponseEntity<String> comprarBilhetesRifa(@PathVariable String id, @PathVariable String rifaId, @RequestBody ComprarBilhetesDTO bilhetes){
+        this.service.comprarBilhetes(id, rifaId, bilhetes.bilhetes());
+        return ResponseEntity.status(HttpStatus.CREATED).body("Bilhetes comprados com sucesso");
+    }
 }

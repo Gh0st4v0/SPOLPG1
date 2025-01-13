@@ -24,10 +24,4 @@ public class RifaController {
         return ResponseEntity.ok(rifas);
     }
 
-    //TODO
-    @PostMapping("rifas/{id}/usuarios/{usuarioId}")
-    public ResponseEntity adicionarParticipante(@RequestBody String usuarioId, @RequestBody Integer numeroBilhetes){
-        return ResponseEntity.ok().build();
-    }
-
 }
