@@ -28,9 +28,9 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/rifa/all").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"/usuario/update/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/rifas").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/sessoes/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/usuarios").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

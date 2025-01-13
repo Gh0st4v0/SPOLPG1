@@ -1,5 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.service;
 
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RegisterDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.AuthenticationException;
@@ -40,6 +41,18 @@ public class UsuarioService {
         }
     }
 
+    public UsuarioDTO criarUsuario(RegisterDTO usuario){
+        try {
+            if (repository.findByEmail(usuario.email()).isPresent()) throw new DatabaseOperationException("O email já esta cadastrado");
+            String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.senha());
+            Usuario novoUsuario = new Usuario(usuario.nome(), usuario.email(), senhaCriptografada);
+            repository.save(novoUsuario);
+            return new UsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
+        } catch (Exception e) {
+            throw new DatabaseOperationException("Erro ao tentar cadastrar usuario");
+        }
+
+    }
 
     public UsuarioDTO alterarNome(String id, String nome) {
         if (nome == null) {
