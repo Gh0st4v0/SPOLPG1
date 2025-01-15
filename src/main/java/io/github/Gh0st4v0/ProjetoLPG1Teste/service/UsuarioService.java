@@ -10,10 +10,12 @@ import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.BilheteRepository;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.RifaRepository;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.UsuarioRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -83,12 +85,12 @@ public class UsuarioService {
         }
     }
 
-    public RifaDTO criarRifa(String nome, String id){
+    public RifaDTO criarRifa(String nome, String descricao, Date dataSorteio, String id){
         try{
             Usuario criador = repository.findById(id).orElseThrow(() -> new UserNotFoundException("O usuario recebido para criar a rifa não existe"));
-            Rifa rifa = new Rifa(nome, criador);
+            Rifa rifa = new Rifa(nome, criador, descricao, dataSorteio);
             Rifa novaRifa = rifaRepository.save(rifa);
-            return new RifaDTO(novaRifa.getId(), novaRifa.getNome(), novaRifa.getCriador().getNome());
+            return new RifaDTO(novaRifa.getId(), novaRifa.getNome(), novaRifa.getDescricao(), novaRifa.getCriador().getNome(), novaRifa.getDataSorteio());
         } catch (Exception e){
             throw new DatabaseOperationException("Erro ao tentar criar rifa");
         }

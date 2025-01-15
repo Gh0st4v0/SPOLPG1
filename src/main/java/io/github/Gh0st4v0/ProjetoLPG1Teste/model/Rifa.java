@@ -27,11 +27,23 @@ public class Rifa {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "CHAR(36)", unique = true, nullable = false)
     private String id;
+
     private String nome;
+
     @Column(name = "data_criacao")
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataCriacao;
+
+    @Column(name = "data_sorteio")
+    private Date dataSorteio;
+
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "vencedor_id")
+    private Usuario vencedor;
+
+    private String descricao;
 
     @JsonManagedReference
     @ManyToOne
@@ -52,9 +64,11 @@ public class Rifa {
     )
     private Set<Usuario> participantes = new HashSet<>();
 
-    public Rifa(String nome, Usuario criador){
+    public Rifa(String nome, Usuario criador, String descricao, Date dataSorteio){
         this.nome = nome;
         this.criador = criador;
+        this.descricao = descricao;
+        this.dataSorteio = dataSorteio;
     }
 
     public void adicionarParticipante(Usuario usuario){

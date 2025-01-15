@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -12,5 +14,7 @@ import lombok.ToString;
 public class RifaDTO {
     String id;
     String nome;
+    String descricao;
     String criadorNome;
+    Date dataSorteio;
 }

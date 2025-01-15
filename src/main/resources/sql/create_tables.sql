@@ -10,14 +10,19 @@ CREATE TABLE `usuarios` (
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
  CREATE TABLE `rifas` (
-    `id` char(36) NOT NULL,
-    `usuario_id` char(36) NOT NULL,
-    `nome` varchar(255) NOT NULL,
-    `data_criacao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `usuario_id` (`usuario_id`),
-    CONSTRAINT `rifas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+   `id` char(36) NOT NULL,
+   `usuario_id` char(36) NOT NULL,
+   `nome` varchar(255) NOT NULL,
+   `data_criacao` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+   `data_sorteio` date NOT NULL,
+   `descricao` text,
+   `vencedor_id` char(36) DEFAULT NULL,
+   PRIMARY KEY (`id`),
+   KEY `usuario_id` (`usuario_id`),
+   KEY `rifas_ibfk_2` (`vencedor_id`),
+   CONSTRAINT `rifas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+   CONSTRAINT `rifas_ibfk_2` FOREIGN KEY (`vencedor_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
   CREATE TABLE `bilhetes` (
      `id` char(36) NOT NULL,

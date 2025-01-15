@@ -21,7 +21,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> getAllUsers(){
+    public ResponseEntity<List<UsuarioDTO>> versUsuarios(){
         List<UsuarioDTO> users = this.service.getAllUsers();
         return ResponseEntity.ok(users);
     }
@@ -33,7 +33,7 @@ public class UsuarioController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UsuarioDTO> alterarNome(@PathVariable String id, @RequestBody UpdateNameDTO usuario){
+    public ResponseEntity<UsuarioDTO> alterarNomeUsuario(@PathVariable String id, @RequestBody UpdateNameDTO usuario){
         return ResponseEntity.ok(this.service.alterarNome(id, usuario.nome()));
     }
 
@@ -45,7 +45,7 @@ public class UsuarioController {
 
     @PostMapping("{id}/rifas")
     public ResponseEntity<RifaDTO> criarRifa(@PathVariable String id, @RequestBody RifaRegisterDTO rifa){
-        RifaDTO novaRifa = this.service.criarRifa(rifa.nome(), id);
+        RifaDTO novaRifa = this.service.criarRifa(rifa.nome(),rifa.descricao(), rifa.dataSorteio(), id);
         return ResponseEntity.ok( novaRifa );
     }
 
