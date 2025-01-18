@@ -30,7 +30,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/rifas").permitAll()
                         .requestMatchers(HttpMethod.POST, "/sessoes/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/usuarios").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/usuarios/**").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/usuarios").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

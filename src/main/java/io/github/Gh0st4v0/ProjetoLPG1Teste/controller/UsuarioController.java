@@ -21,9 +21,22 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> versUsuarios(){
+    public ResponseEntity<List<UsuarioDTO>> verUsuarios(){
         List<UsuarioDTO> users = this.service.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("{id}/rifas")
+    public ResponseEntity<List<RifaDTO>> obterRifasUsuario(@PathVariable String id, @RequestParam String tipo){
+        if (tipo.equals("criadas")) {
+            List<RifaDTO> rifas = this.service.obterRifasCriadas(id);
+            return ResponseEntity.ok(rifas);
+        }
+        else if (tipo.equals("participando")) {
+            List<RifaDTO> rifas = this.service.obterRifasParticipando(id);
+            return ResponseEntity.ok(rifas);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @PostMapping
@@ -40,7 +53,7 @@ public class UsuarioController {
     @DeleteMapping("{id}")
     public ResponseEntity deletarUsuario(@PathVariable String id, @RequestBody AuthenticationDTO user){
         this.service.deletarUsuario(id, user.senha());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("{id}/rifas")

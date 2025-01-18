@@ -44,6 +44,32 @@ public class UsuarioService {
         }
     }
 
+    public List<RifaDTO> obterRifasCriadas(String id) {
+        try{
+            Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+            return usuario.getRifasCriadas()
+                    .stream()
+                    .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
+                    .toList();
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
+    public List<RifaDTO> obterRifasParticipando(String id) {
+        try{
+            Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+            return usuario.getRifasQueParticipa()
+                    .stream()
+                    .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
+                    .toList();
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            return null;
+        }
+    }
+
     public UsuarioDTO criarUsuario(RegisterDTO usuario){
         try {
             if (repository.findByEmail(usuario.email()).isPresent()) throw new DatabaseOperationException("O email já esta cadastrado");
@@ -52,8 +78,8 @@ public class UsuarioService {
             repository.save(novoUsuario);
             return new UsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
         } catch (Exception e) {
-            throw new DatabaseOperationException("Erro ao tentar cadastrar usuario");
-        }
+            System.err.println(e.getMessage());
+            return null;        }
 
     }
 
@@ -68,8 +94,8 @@ public class UsuarioService {
             UsuarioDTO usuarioDTO = new UsuarioDTO(usuarioAlterado.getId(), usuarioAlterado.getNome(), usuarioAlterado.getEmail());
             return usuarioDTO;
         } catch (Exception e) {
-            throw new DatabaseOperationException("Erro ao tentar alterar o nome do usuário");
-        }
+            System.err.println(e.getMessage());
+            return null;        }
     }
 
     public void deletarUsuario(String id, String senha) {
@@ -81,7 +107,7 @@ public class UsuarioService {
         try {
             repository.delete(teste);
         } catch (Exception e) {
-            throw new DatabaseOperationException("Erro ao tentar deletar usuário");
+            System.err.println(e.getMessage());
         }
     }
 
@@ -92,8 +118,8 @@ public class UsuarioService {
             Rifa novaRifa = rifaRepository.save(rifa);
             return new RifaDTO(novaRifa.getId(), novaRifa.getNome(), novaRifa.getDescricao(), novaRifa.getCriador().getNome(), novaRifa.getDataSorteio());
         } catch (Exception e){
-            throw new DatabaseOperationException("Erro ao tentar criar rifa");
-        }
+            System.err.println(e.getMessage());
+            return null;        }
 
     }
 
@@ -109,7 +135,7 @@ public class UsuarioService {
             }
             rifaRepository.save(rifa);
         } catch (Exception e){
-            throw new DatabaseOperationException("Erro ao tentar comprar bilhetes");
+            System.err.println(e.getMessage());
         }
     }
 }
