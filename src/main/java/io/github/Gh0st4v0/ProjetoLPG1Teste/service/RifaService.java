@@ -1,8 +1,12 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.service;
 
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.RifaDTO;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.UsuarioDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.DatabaseOperationException;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.exceptions.RifaNotFoundException;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Bilhete;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Rifa;
+import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.RifaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,19 @@ public class RifaService {
                     .toList();
         } catch (Exception e){
             throw new DatabaseOperationException("Não foi possivel encontrar os usuarios");
+        }
+    }
+
+    public List<UsuarioDTO> obterParticipantes(String id){
+        try{
+            Rifa rifa = repository.findById(id).orElseThrow(() -> new RifaNotFoundException("Rifa não encontrada"));
+            return rifa.getParticipantes()
+                    .stream()
+                    .map(participante -> new UsuarioDTO(participante.getId(), participante.getNome(), participante.getEmail()))
+                    .toList();
+        } catch (Exception e){
+            System.err.println("Erro ao obter participantes" + e.getMessage());
+            return null;
         }
     }
 
