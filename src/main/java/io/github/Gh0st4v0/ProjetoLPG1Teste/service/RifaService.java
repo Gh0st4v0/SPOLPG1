@@ -24,27 +24,18 @@ public class RifaService {
     }
 
     public List<RifaDTO> verRifas(){
-        try{
-            return repository.findAll()
+        return repository.findAll()
                     .stream()
                     .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
                     .toList();
-        } catch (Exception e){
-            throw new DatabaseOperationException("Não foi possivel encontrar os usuarios");
-        }
     }
 
     public List<UsuarioDTO> obterParticipantes(String id){
-        try{
-            Rifa rifa = repository.findById(id).orElseThrow(() -> new RifaNotFoundException("Rifa não encontrada"));
-            return rifa.getParticipantes()
-                    .stream()
-                    .map(participante -> new UsuarioDTO(participante.getId(), participante.getNome(), participante.getEmail()))
-                    .toList();
-        } catch (Exception e){
-            System.err.println("Erro ao obter participantes" + e.getMessage());
-            return null;
-        }
+        Rifa rifa = repository.findById(id).orElseThrow(() -> new RifaNotFoundException("Rifa não encontrada"));
+        return rifa.getParticipantes()
+                .stream()
+                .map(participante -> new UsuarioDTO(participante.getId(), participante.getNome(), participante.getEmail()))
+                .toList();
     }
 
 }

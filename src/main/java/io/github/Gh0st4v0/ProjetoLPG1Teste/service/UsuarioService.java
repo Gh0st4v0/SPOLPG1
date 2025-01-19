@@ -34,53 +34,35 @@ public class UsuarioService {
     }
 
     public List<UsuarioDTO> getAllUsers() {
-        try {
-            return repository.findAll()
-                    .stream()
-                    .map(user -> new UsuarioDTO(user.getId(), user.getNome(), user.getEmail()))
-                    .toList();
-        } catch (Exception e) {
-            throw new DatabaseOperationException("Erro ao tentar recuperar todos os usuários");
-        }
+        return repository.findAll()
+                .stream()
+                .map(user -> new UsuarioDTO(user.getId(), user.getNome(), user.getEmail()))
+                .toList();
+
     }
 
     public List<RifaDTO> obterRifasCriadas(String id) {
-        try{
-            Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
-            return usuario.getRifasCriadas()
-                    .stream()
-                    .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
-                    .toList();
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-            return null;
-        }
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+        return usuario.getRifasCriadas()
+                .stream()
+                .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
+                .toList();
     }
 
     public List<RifaDTO> obterRifasParticipando(String id) {
-        try{
-            Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
-            return usuario.getRifasQueParticipa()
-                    .stream()
-                    .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
-                    .toList();
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-            return null;
-        }
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+        return usuario.getRifasQueParticipa()
+                .stream()
+                .map(rifa -> new RifaDTO(rifa.getId(), rifa.getNome(), rifa.getDescricao(), rifa.getCriador().getNome(), rifa.getDataSorteio()))
+                .toList();
     }
 
     public UsuarioDTO criarUsuario(RegisterDTO usuario){
-        try {
-            if (repository.findByEmail(usuario.email()).isPresent()) throw new DatabaseOperationException("O email já esta cadastrado");
-            String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.senha());
-            Usuario novoUsuario = new Usuario(usuario.nome(), usuario.email(), senhaCriptografada);
-            repository.save(novoUsuario);
-            return new UsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return null;        }
-
+        if (repository.findByEmail(usuario.email()).isPresent()) throw new DatabaseOperationException("O email já esta cadastrado");
+        String senhaCriptografada = new BCryptPasswordEncoder().encode(usuario.senha());
+        Usuario novoUsuario = new Usuario(usuario.nome(), usuario.email(), senhaCriptografada);
+        repository.save(novoUsuario);
+        return new UsuarioDTO(novoUsuario.getId(), novoUsuario.getNome(), novoUsuario.getEmail());
     }
 
     public UsuarioDTO alterarNome(String id, String nome) {
@@ -88,14 +70,11 @@ public class UsuarioService {
             throw new InvalidInputException("O campo nome está vazio");
         }
         Usuario teste = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Id não encontrado"));
-        try {
-            teste.setNome(nome);
-            Usuario usuarioAlterado = repository.save(teste);
-            UsuarioDTO usuarioDTO = new UsuarioDTO(usuarioAlterado.getId(), usuarioAlterado.getNome(), usuarioAlterado.getEmail());
-            return usuarioDTO;
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return null;        }
+        teste.setNome(nome);
+        Usuario usuarioAlterado = repository.save(teste);
+        UsuarioDTO usuarioDTO = new UsuarioDTO(usuarioAlterado.getId(), usuarioAlterado.getNome(), usuarioAlterado.getEmail());
+        return usuarioDTO;
+
     }
 
     public void deletarUsuario(String id, String senha) {
@@ -104,39 +83,26 @@ public class UsuarioService {
         if (!senhaCorreta) {
             throw new AuthenticationException("Senha incorreta");
         }
-        try {
-            repository.delete(teste);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        repository.delete(teste);
     }
 
     public RifaDTO criarRifa(String nome, String descricao, Date dataSorteio, String id){
-        try{
-            Usuario criador = repository.findById(id).orElseThrow(() -> new UserNotFoundException("O usuario recebido para criar a rifa não existe"));
-            Rifa rifa = new Rifa(nome, criador, descricao, dataSorteio);
-            Rifa novaRifa = rifaRepository.save(rifa);
-            return new RifaDTO(novaRifa.getId(), novaRifa.getNome(), novaRifa.getDescricao(), novaRifa.getCriador().getNome(), novaRifa.getDataSorteio());
-        } catch (Exception e){
-            System.err.println(e.getMessage());
-            return null;        }
-
+        Usuario criador = repository.findById(id).orElseThrow(() -> new UserNotFoundException("O usuario recebido para criar a rifa não existe"));
+        Rifa rifa = new Rifa(nome, criador, descricao, dataSorteio);
+        Rifa novaRifa = rifaRepository.save(rifa);
+        return new RifaDTO(novaRifa.getId(), novaRifa.getNome(), novaRifa.getDescricao(), novaRifa.getCriador().getNome(), novaRifa.getDataSorteio());
     }
 
     public void comprarBilhetes(String id, String rifaId, int bilhetes) {
-        try{
-            if (bilhetes < 1) throw new ArithmeticException("O usuário deve comprar ao menos um bilhete");
-            Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
-            Rifa rifa = rifaRepository.findById(rifaId).orElseThrow(() -> new RifaNotFoundException("Rifa não encontrada"));
-            rifa.adicionarParticipante(usuario);
-            for (int i = 0; i < bilhetes; i++) {
-                Bilhete bilhete = new Bilhete(usuario, rifa);
-                bilheteRepository.save(bilhete);
-            }
-            rifaRepository.save(rifa);
-        } catch (Exception e){
-            System.err.println(e.getMessage());
+        if (bilhetes < 1) throw new ArithmeticException("O usuário deve comprar ao menos um bilhete");
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado"));
+        Rifa rifa = rifaRepository.findById(rifaId).orElseThrow(() -> new RifaNotFoundException("Rifa não encontrada"));
+        rifa.adicionarParticipante(usuario);
+        for (int i = 0; i < bilhetes; i++) {
+            Bilhete bilhete = new Bilhete(usuario, rifa);
+            bilheteRepository.save(bilhete);
         }
+        rifaRepository.save(rifa);
     }
 }
 
