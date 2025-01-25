@@ -1,6 +1,5 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.infra;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,8 +18,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfigurations {
 
-    @Autowired
-    SecurityFilter securityFilter;
+    SecurityFilter filter;
+
+    public SecurityConfigurations(SecurityFilter filter){
+        this.filter = filter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
@@ -34,7 +36,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST,"/usuarios").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

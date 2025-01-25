@@ -15,7 +15,6 @@ public class UsuarioController {
 
     private final UsuarioService service;
 
-    @Autowired
     public UsuarioController(UsuarioService service) {
         this.service = service;
     }

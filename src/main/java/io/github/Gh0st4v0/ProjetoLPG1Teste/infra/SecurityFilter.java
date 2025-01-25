@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,16 +17,21 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    TokenService tokenService;
-    @Autowired
+    TokenService service;
     UsuarioRepository repository;
+
+    public SecurityFilter (TokenService service, UsuarioRepository repository){
+        this.service = service;
+        this.repository = repository;
+
+    }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
         if(token != null){
-            var id = tokenService.validateToken(token);
+            var id = service.validateToken(token);
             UserDetails usuario = repository.findById(id).orElseThrow(() -> new UserNotFoundException("Usuario não encontrado no token"));
             var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);

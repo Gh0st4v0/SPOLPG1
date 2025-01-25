@@ -10,8 +10,6 @@ import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.BilheteRepository;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.RifaRepository;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.repository.UsuarioRepository;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,6 @@ public class UsuarioService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final BilheteRepository bilheteRepository;
 
-    @Autowired
     public UsuarioService(UsuarioRepository repository, RifaRepository rifaRepository, BilheteRepository bilheteRepository) {
         this.repository = repository;
         this.rifaRepository = rifaRepository;
