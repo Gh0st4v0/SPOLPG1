@@ -1,5 +1,6 @@
 package io.github.Gh0st4v0.ProjetoLPG1Teste.infra;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,13 +17,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfigurations {
 
-    SecurityFilter filter;
+    private final SecurityFilter filter;
 
-    public SecurityConfigurations(SecurityFilter filter){
-        this.filter = filter;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
