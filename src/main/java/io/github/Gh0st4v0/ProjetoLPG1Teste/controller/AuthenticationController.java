@@ -4,6 +4,7 @@ import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.AuthenticationDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.DTOs.LoginResponseDTO;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.infra.TokenService;
 import io.github.Gh0st4v0.ProjetoLPG1Teste.model.Usuario;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +20,7 @@ public class AuthenticationController {
     private  final TokenService service;
 
     @PostMapping
-    public ResponseEntity<Object> login(@RequestBody AuthenticationDTO data){
+    public ResponseEntity<Object> login(@RequestBody @Valid AuthenticationDTO data){
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.senha());
         var auth = this.manager.authenticate(usernamePassword);
         var token = this.service.generateToken((Usuario) auth.getPrincipal());
